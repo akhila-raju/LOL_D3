@@ -1,5 +1,5 @@
-var w = 960;
-var h = 500;
+var width = 960;
+var height = 500;
 
 var dataset;
 
@@ -9,12 +9,29 @@ d3.csv("flarlarlar.csv", function(error, data){
 	} else {
 		console.log('Data uploaded successfully!');
 	}
-	dataset = data;
-	var map = data.map(function d { return Object })
+	dataset =  data;
+
+	var map = data.map(function (i) { return parseInt(i.kills); })
 
 	var histogram = d3.layout.histogram()
-		.bins() //number of bins, varies for each category
+		.bins() // specify number of bars, varies for each category
 		(map) //specify where data is coming from
+
+	var canvas = d3.select("body").append("svg")
+		.attr("width", 500)
+		.attr("height", 500)
+
+	var bars = canvas.selectAll(".bar")
+		.data(histogram)
+		.enter()
+		.append("g")
+
+	bars.append("rect")
+		.attr("x", function (d) { return d.x; }) //return lower bound
+		.attr("y", 0) 
+		.attr("width", function (d) { return d.dx; }) // return range
+		.attr("height", function (d) { return d.y; }) //return number of values
+		.attr("fill", "steelblue")
 
 	begin()
 });
