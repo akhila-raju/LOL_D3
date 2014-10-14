@@ -10,6 +10,7 @@ d3.csv("flarlarlar.csv", function(error, data){
 		console.log('Data uploaded successfully!');
 	}
 	dataset = data;
+	var map = data.map(function d {var: })
 	begin()
 });
 
