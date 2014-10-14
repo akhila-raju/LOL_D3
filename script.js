@@ -10,7 +10,12 @@ d3.csv("flarlarlar.csv", function(error, data){
 		console.log('Data uploaded successfully!');
 	}
 	dataset = data;
-	var time = data.map(function d { return Object })
+	var map = data.map(function d { return Object })
+
+	var histogram = d3.layout.histogram()
+		.bins() //number of bins, varies for each category
+		(map) //specify where data is coming from
+
 	begin()
 });
 
