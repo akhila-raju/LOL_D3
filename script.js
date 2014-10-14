@@ -34,7 +34,7 @@ var chart = d3.select(".chart")
   	.append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-
+var 
 
 d3.csv("flarlarlar.csv", type, function(error, data) {
 
@@ -43,6 +43,7 @@ d3.csv("flarlarlar.csv", type, function(error, data) {
 	} else {
 		console.log('Data uploaded successfully!');
 	}
+
 	data.forEach(function(d){d['kills'] = +d['kills'],
 							 d['assists'] = +d['assists'],
 							 d['deaths'] = +d['deaths']
@@ -50,8 +51,22 @@ d3.csv("flarlarlar.csv", type, function(error, data) {
 							 d['day'] = dayOfWeek(d['time']),
 							 console.log(d['day']);
 							 d['winner'] = d['winner']=="True"?1:0;});
+	var domainByTrait = {},
+    	traits = d3.keys(data[0]),
+    	n = traits.length;
+
+    traits.forEach(function(trait) {
+    	domainByTrait[trait] = d3.extent(data, function(d) { return d[trait]; });
+  	});
 
 	dataset = data;
+
+	var brush = d3.svg.brush()
+    	.x(x)
+    	.extent([.3, .9])
+   		.on("brushstart", brushstart)
+    	.on("brush", brushmove)
+    	.on("brushend", brushend);
 
   	xScale.domain(data.map(function(d) { return d['day']; }));
   	yScale.domain([0, 1]);
