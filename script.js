@@ -10,7 +10,7 @@ d3.csv("flarlarlar.csv", function(error, data){
 		console.log('Data uploaded successfully!');
 	}
 	dataset = data;
-	var map = data.map(function d {var: })
+	var time = data.map(function d { return Object })
 	begin()
 });
 
