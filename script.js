@@ -1,40 +1,66 @@
-var width = 960;
-var height = 500;
+var w = 960;
+var h = 500;
 
-var dataset;
 
-d3.csv("flarlarlar.csv", function(error, data){
+var margin = {top: 20, right: 30, bottom: 30, left: 40},
+    width = 960 - margin.left - margin.right,
+    height = 500 - margin.top - margin.bottom;
+
+var x = d3.scale.ordinal()
+    .rangeRoundBands([0, width], .1);
+
+var y = d3.scale.linear()
+    .range([height, 0]);
+
+var xAxis = d3.svg.axis()
+    .scale(x)
+    .orient("bottom");
+
+var yAxis = d3.svg.axis()
+    .scale(y)
+    .orient("left");
+
+var chart = d3.select(".chart")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+  	.append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+d3.csv("flarlarlar.csv", type, function(error, data) {
 	if (error){
 		console.log('Error uploading data');
 	} else {
 		console.log('Data uploaded successfully!');
 	}
-	dataset =  data;
 
-	var map = data.map(function (i) { return parseInt(i.kills); })
+  	x.domain(data.map(function(d) { return d["time"]; }));
+  	y.domain([0, 1]);
 
-	var histogram = d3.layout.histogram()
-		.bins() // specify number of bars, varies for each category
-		(map) //specify where data is coming from
+  	chart.append("g")
+      	.attr("class", "x axis")
+      	.attr("transform", "translate(0," + height + ")")
+      	.call(xAxis);
 
-	var canvas = d3.select("body").append("svg")
-		.attr("width", 500)
-		.attr("height", 500)
+  	chart.append("g")
+      	.attr("class", "y axis")
+      	.call(yAxis);
 
-	var bars = canvas.selectAll(".bar")
-		.data(histogram)
-		.enter()
-		.append("g")
-
-	bars.append("rect")
-		.attr("x", function (d) { return d.x; }) //return lower bound
-		.attr("y", 0) 
-		.attr("width", function (d) { return d.dx; }) // return range
-		.attr("height", function (d) { return d.y; }) //return number of values
-		.attr("fill", "steelblue")
-
-	begin()
+  	chart.selectAll(".bar")
+      	.data(data)
+    	.enter().append("rect")
+      	.attr("class", "bar")
+      	.attr("x", function(d) { return x(d["time"]); })
+      	.attr("y", function(d) { return y(d.value); })
+      	.attr("height", function(d) { return height - y(d.value); })
+      	.attr("width", x.rangeBand());
 });
+
+function type(d) {
+  d.value = +d.value; // coerce to number
+  return d;
+}
+
+
 
 // Backend functions
 // Returns a unique set of values
