@@ -49,9 +49,9 @@ d3.csv("flarlarlar.csv", type, function(error, data) {
       	.data(data)
     	.enter().append("rect")
       	.attr("class", "bar")
-      	.attr("x", function(d) { return x(d["time"]); })
-      	.attr("y", function(d) { return y(d.value); })
-      	.attr("height", function(d) { return height - y(d.value); })
+      	.attr("x", function(d) { console.log(+d["time"]); return x(+d["time"]); })
+      	.attr("y", function(d) { console.log(d["winner"]=="True"?1:0);return 1;})
+      	.attr("height", function(d) {return d["winner"]=="True"?height:0;})
       	.attr("width", x.rangeBand());
 });
 
