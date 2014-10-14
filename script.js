@@ -34,7 +34,6 @@ var chart = d3.select(".chart")
   	.append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-var 
 
 d3.csv("flarlarlar.csv", type, function(error, data) {
 
