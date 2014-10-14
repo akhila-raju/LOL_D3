@@ -1,23 +1,24 @@
 var w = 960;
 var h = 500;
 
+var dataset;
 
 var margin = {top: 20, right: 30, bottom: 30, left: 40},
     width = 960 - margin.left - margin.right,
     height = 500 - margin.top - margin.bottom;
 
-var x = d3.scale.ordinal()
+var xScale = d3.scale.ordinal()
     .rangeRoundBands([0, width], .1);
 
-var y = d3.scale.linear()
+var yScale = d3.scale.linear()
     .range([height, 0]);
 
 var xAxis = d3.svg.axis()
-    .scale(x)
+    .scale(xScale)
     .orient("bottom");
 
 var yAxis = d3.svg.axis()
-    .scale(y)
+    .scale(yScale)
     .orient("left");
 
 var chart = d3.select(".chart")
@@ -26,15 +27,27 @@ var chart = d3.select(".chart")
   	.append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
+
+
 d3.csv("flarlarlar.csv", type, function(error, data) {
+
 	if (error){
 		console.log('Error uploading data');
 	} else {
 		console.log('Data uploaded successfully!');
 	}
+	data.forEach(function(d){d['kills'] = +d['kills'],
+							 d['assists'] = +d['assists'],
+							 d['deaths'] = +d['deaths']
+							 d['time'] = +d['time'],
+							 d['day'] = dayOfWeek(d['time']),
+							 console.log(d['day']);
+							 d['winner'] = d['winner']=="True"?1:0;});
 
-  	x.domain(data.map(function(d) { return d["time"]; }));
-  	y.domain([0, 1]);
+	dataset = data;
+
+  	xScale.domain(data.map(function(d) { return d['day']; }));
+  	yScale.domain([0, 1]);
 
   	chart.append("g")
       	.attr("class", "x axis")
@@ -45,14 +58,16 @@ d3.csv("flarlarlar.csv", type, function(error, data) {
       	.attr("class", "y axis")
       	.call(yAxis);
 
+    dayWins = winRate(data, 'day');
+
   	chart.selectAll(".bar")
       	.data(data)
     	.enter().append("rect")
       	.attr("class", "bar")
-      	.attr("x", function(d) { console.log(+d["time"]); return x(+d["time"]); })
-      	.attr("y", function(d) { console.log(d["winner"]=="True"?1:0);return 1;})
-      	.attr("height", function(d) {return d["winner"]=="True"?height:0;})
-      	.attr("width", x.rangeBand());
+      	.attr("x", function(d) { return xScale(d['day']); })
+      	.attr("y", function(d) { return yScale(dayWins[d['day']][1]);})
+      	.attr("height", function(d) {return height - yScale(dayWins[d['day']][1]);})
+      	.attr("width", xScale.rangeBand());
 });
 
 function type(d) {
@@ -60,39 +75,22 @@ function type(d) {
   return d;
 }
 
-
-
 // Backend functions
-// Returns a unique set of values
-function unique(a) {
-    return a.reduce(function(p, c) {
-        if (p.indexOf(c) < 0) p.push(c);
-        return p;
-    }, []);
-};
-
-function sortNumber(a, b){
-	return a-b;
-}
-
-// For each match in the dataset, return the attribute you're looking for and whether or not you won.
-// Returns two arrays, Wins and Losses
-function winLoss(a){
-	var reduced = dataset.map(function(x){
-		return [x[a], x['winner']];
+function winLoss(data, a){
+	var reduced = data.map(function(datum){
+		return [datum[a], datum['winner']];
 	})
-	var wins = reduced.filter(function(x){return x[1] == "True"}).map(function(x){return +x[0]});
-	var losses = reduced.filter(function(x){return x[1] == "False"}).map(function(x){return +x[0]});
+	var wins = reduced.filter(function(x){return x[1] == 1}).map(function(x){return x[0]});
+	var losses = reduced.filter(function(x){return x[1] == 0}).map(function(x){return x[0]});
 	wins.sort(sortNumber);
 	losses.sort(sortNumber);
 	return [wins, losses];
 }
 
-function winRate(a){
-	var wins = winLoss(a)[0];
-	var losses = winLoss(a)[1];
+function winRate(data, a){
+	var wins = winLoss(data, a)[0];
+	var losses = winLoss(data, a)[1];
 	var xVals = unique(wins.concat(losses));
-	console.log(xVals);
 	xVals.sort(sortNumber);
 	var rates = [];
 	for (i = 0; i<xVals.length; i++){
@@ -119,6 +117,26 @@ function winRate(a){
 	}
 	return rates;
 }
+// Returns a unique set of values
+function unique(a) {
+    return a.reduce(function(p, c) {
+        if (p.indexOf(c) < 0) p.push(c);
+        return p;
+    }, []);
+};
+
+function sortNumber(a, b){
+	return a-b;
+}
+
+function dayOfWeek(ms){
+	a = new Date(ms);
+	return a.getDay();
+}
+
+// For each match in the dataset, return the attribute you're looking for and whether or not you won.
+// Returns two arrays, Wins and Losses
+
 
 // Visualization 
 function begin(){
