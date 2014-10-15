@@ -67,3 +67,8 @@ div {
 #caption {
 	font-size: 12px;
 }
+
+.chart rect:hover {
+  fill: orangered ;
+}
+
