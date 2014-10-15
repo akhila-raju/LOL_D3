@@ -155,13 +155,3 @@ function dayOfWeek(ms){
 	return a.getDay();
 }
 
-// For each match in the dataset, return the attribute you're looking for and whether or not you won.
-// Returns two arrays, Wins and Losses
-
-
-// Visualization 
-function begin(){
-	
-            
-    
-}
