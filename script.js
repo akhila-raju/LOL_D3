@@ -33,68 +33,68 @@ var yAxis = d3.svg.axis()
 var chart = d3.select(".chart")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
-  	.append("g")
+    .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
 
 d3.csv("pobelter.csv", type, function(error, data) {
 
-	if (error){
-		console.log('Error uploading data');
-	} else {
-		console.log('Data uploaded successfully!');
-	}
+  if (error){
+    console.log('Error uploading data');
+  } else {
+    console.log('Data uploaded successfully!');
+  }
 
-	data.forEach(function(d){d['kills'] = +d['kills'],
-							 d['assists'] = +d['assists'],
-							 d['deaths'] = +d['deaths']
-							 d['time'] = +d['time'],
+  data.forEach(function(d){d['kills'] = +d['kills'],
+               d['assists'] = +d['assists'],
+               d['deaths'] = +d['deaths']
+               d['time'] = +d['time'],
                d['wardsPlaced'] = +d['wardsPlaced'],
-							 d['day'] = dayOfWeek(d['time']),
+               d['day'] = dayOfWeek(d['time']),
                d['date'] = dateStr(d['time']),
                d['timeOfDay'] = timeOfDay(d['time']),
-							 d['winner'] = d['winner']=="True"?1:0;});
+               d['winner'] = d['winner']=="True"?1:0;});
 
-	var domainByTrait = {},
-    	traits = d3.keys(data[0]),
-    	n = traits.length;
+  var domainByTrait = {},
+      traits = d3.keys(data[0]),
+      n = traits.length;
 
     traits.forEach(function(trait) {
-    	domainByTrait[trait] = d3.extent(data, function(d) { return d[trait]; });
-  	});
+      domainByTrait[trait] = d3.extent(data, function(d) { return d[trait]; });
+    });
 
-	dataset = data;
+  dataset = data;
 
-	// var brush = d3.svg.brush()
- //    	.x(xScale)
- //    	.extent([.3, .9])
- //   		.on("brushstart", brushstart)
- //    	.on("brush", brushmove)
- //    	.on("brushend", brushend);
+  // var brush = d3.svg.brush()
+ //     .x(xScale)
+ //     .extent([.3, .9])
+ //       .on("brushstart", brushstart)
+ //     .on("brush", brushmove)
+ //     .on("brushend", brushend);
     dayWins = winRate(dataset, 'timeOfDay');
     console.log(dayWins);
     
-  	xScale.domain(range(0,23));
-  	yScale.domain([0, 1]);
+    xScale.domain(range(0,23));
+    yScale.domain([0, 1]);
 
 
-  	chart.append("g")
-      	.attr("class", "x axis")
-      	.attr("transform", "translate(0," + height + ")")
-      	.call(xAxis);
+    chart.append("g")
+        .attr("class", "x axis")
+        .attr("transform", "translate(0," + height + ")")
+        .call(xAxis);
 
-  	chart.append("g")
-      	.attr("class", "y axis")
-      	.call(yAxis);
+    chart.append("g")
+        .attr("class", "y axis")
+        .call(yAxis);
 
-  	chart.selectAll("rect")
-      	.data(dayWins, function(d) { return(d); })
-    	.enter().append("rect")
-      	.attr("class", "bar")
-      	.attr("x", function(d) { return xScale(d[0]); })
-      	.attr("y", function(d) { return yScale(d[1]);})
-      	.attr("height", function(d) {return height - yScale(d[1]);})
-      	.attr("width", xScale.rangeBand());
+    chart.selectAll("rect")
+        .data(dayWins, function(d) { return(d); })
+      .enter().append("rect")
+        .attr("class", "bar")
+        .attr("x", function(d) { return xScale(d[0]); })
+        .attr("y", function(d) { return yScale(d[1]);})
+        .attr("height", function(d) {return height - yScale(d[1]);})
+        .attr("width", xScale.rangeBand());
 
     var maxKills = d3.max(dataset.map(function(d) {return d['kills'];}));
     var maxDeaths = d3.max(dataset.map(function(d) {return d['deaths'];}));
@@ -170,45 +170,45 @@ function type(d) {
 
 // Backend functions
 function winLoss(data, a){
-	var reduced = data.map(function(datum){
-		return [datum[a], datum['winner']];
-	})
-	var wins = reduced.filter(function(x){return x[1] == 1}).map(function(x){return x[0]});
-	var losses = reduced.filter(function(x){return x[1] == 0}).map(function(x){return x[0]});
-	wins.sort(sortNumber);
-	losses.sort(sortNumber);
-	return [wins, losses];
+  var reduced = data.map(function(datum){
+    return [datum[a], datum['winner']];
+  })
+  var wins = reduced.filter(function(x){return x[1] == 1}).map(function(x){return x[0]});
+  var losses = reduced.filter(function(x){return x[1] == 0}).map(function(x){return x[0]});
+  wins.sort(sortNumber);
+  losses.sort(sortNumber);
+  return [wins, losses];
 }
 
 function winRate(data, a){
-	var wins = winLoss(data, a)[0];
-	var losses = winLoss(data, a)[1];
-	var xVals = unique(wins.concat(losses));
-	xVals.sort(sortNumber);
-	var rates = [];
-	for (i = 0; i<xVals.length; i++){
-		val = xVals[i]
-		w = 0;
-		l = 0;
-		for (x = 0; x<wins.length; x++){
-			if (wins[x] == val){
-				w++;
-			}
-		}
-		for (y = 0; y<losses.length; y++){
-			if (losses[y] == val){
-				l++;
-			}
-		}
-		if (w == 0){
-			rates.push([val,0]);
-		} else if (l == 0){
-			rates.push([val, 1]);
-		} else {
-			rates.push([val,w/(w+l)]);
-		}
-	}
-	return rates;
+  var wins = winLoss(data, a)[0];
+  var losses = winLoss(data, a)[1];
+  var xVals = unique(wins.concat(losses));
+  xVals.sort(sortNumber);
+  var rates = [];
+  for (i = 0; i<xVals.length; i++){
+    val = xVals[i]
+    w = 0;
+    l = 0;
+    for (x = 0; x<wins.length; x++){
+      if (wins[x] == val){
+        w++;
+      }
+    }
+    for (y = 0; y<losses.length; y++){
+      if (losses[y] == val){
+        l++;
+      }
+    }
+    if (w == 0){
+      rates.push([val,0]);
+    } else if (l == 0){
+      rates.push([val, 1]);
+    } else {
+      rates.push([val,w/(w+l)]);
+    }
+  }
+  return rates;
 }
 //Credit for most of these helper functions goes to stackoverflow contributors.
 var range = function(start, end, step) {
@@ -270,12 +270,12 @@ function unique(a) {
 };
 
 function sortNumber(a, b){
-	return a-b;
+  return a-b;
 }
 
 function dayOfWeek(ms){
-	a = new Date(ms);
-	return a.getDay();
+  a = new Date(ms);
+  return a.getDay();
 }
 
 function dateStr(ms){
@@ -298,8 +298,8 @@ function filterData(attr, values){
       ranges[i] = values;
     }
   }
-	var toVisualize = dataset.filter(function(d) { return isInRange(d)});
-	update(toVisualize);
+  var toVisualize = dataset.filter(function(d) { return isInRange(d)});
+  update(toVisualize);
 }
 
 function isInRange(datum){
@@ -316,16 +316,16 @@ function update(dataset) {
   console.log(dayWins);
   yScale.domain([0, 1]);
 
-	var bar = chart.selectAll("rect")
-		.data(dayWins, function(d) { return(d); });
+  var bar = chart.selectAll("rect")
+    .data(dayWins, function(d) { return(d); });
 
   bar.exit().remove();
 
-	bar.enter().append("rect")
-		.attr("class", "bar")
-      	.attr("x", function(d) { return xScale(d[0]); })
-      	.attr("y", function(d) { return yScale(d[1]);})
-      	.attr("height", function(d) {return height - yScale(d[1]);})
-      	.attr("width", xScale.rangeBand());
+  bar.enter().append("rect")
+    .attr("class", "bar")
+        .attr("x", function(d) { return xScale(d[0]); })
+        .attr("y", function(d) { return yScale(d[1]);})
+        .attr("height", function(d) {return height - yScale(d[1]);})
+        .attr("width", xScale.rangeBand());
 
 }
