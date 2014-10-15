@@ -51,6 +51,7 @@ d3.csv("flarlarlar.csv", type, function(error, data) {
 							 d['time'] = +d['time'],
 							 d['day'] = dayOfWeek(d['time']),
                d['date'] = dateStr(d['time']),
+               d['timeOfDay'] = timeOfDay(d['time']),
 							 d['winner'] = d['winner']=="True"?1:0;});
 
 	var domainByTrait = {},
@@ -69,7 +70,7 @@ d3.csv("flarlarlar.csv", type, function(error, data) {
  //   		.on("brushstart", brushstart)
  //    	.on("brush", brushmove)
  //    	.on("brushend", brushend);
-    dayWins = winRate(dataset, 'day');
+    dayWins = winRate(dataset, 'timeOfDay');
     console.log(dayWins);
     
   	xScale.domain(dayWins.map(function(d) { return d[0]; }));
@@ -165,6 +166,11 @@ function dateStr(ms){
   return a.toLocaleDateString();
 }
 
+function timeOfDay(ms){
+  a = new Date(ms);
+  return a.getHours();
+}
+
   $(function() {
     $( "#kills" ).slider({
       range: true,
@@ -232,7 +238,7 @@ function isInRange(datum){
 }
 
 function update(dataset) {
-  dayWins = winRate(dataset, 'day')
+  dayWins = winRate(dataset, 'timeOfDay');
   console.log(dayWins);
   yScale.domain([0, 1]);
 
