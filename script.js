@@ -66,7 +66,7 @@ d3.csv("flarlarlar.csv", type, function(error, data) {
  //    	.on("brush", brushmove)
  //    	.on("brushend", brushend);
 
-  	xScale.domain(data.map(function(d) { return d['day']; }));
+  	xScale.domain(dataset.map(function(d) { return d['day']; }));
   	yScale.domain([0, 1]);
 
   	chart.append("g")
@@ -78,17 +78,19 @@ d3.csv("flarlarlar.csv", type, function(error, data) {
       	.attr("class", "y axis")
       	.call(yAxis);
 
-    dayWins = winRate(data, 'day');
+    dayWins = winRate(dataset, 'day');
 
   	chart.selectAll(".bar")
-      	.data(data)
+      	.data(dataset)
     	.enter().append("rect")
       	.attr("class", "bar")
       	.attr("x", function(d) { return xScale(d['day']); })
       	.attr("y", function(d) { return yScale(dayWins[d['day']][1]);})
       	.attr("height", function(d) {return height - yScale(dayWins[d['day']][1]);})
       	.attr("width", xScale.rangeBand());
-      
+
+    graph(dataset);
+
 });
 
 function type(d) {
@@ -202,7 +204,7 @@ var killRange, deathRange, assistRange;
       " - " + $( "#assists" ).slider( "values", 1 ) );
   });
 
-var ranges = [];
+var ranges = [[0, 27], [0, 13], [0, 33]];
 
 function filterData(attr, values){
 	if (attr == 'kills'){
@@ -213,6 +215,8 @@ function filterData(attr, values){
 		ranges[2] = values;
 	}
 	var toVisualize = dataset.filter(function(d) { return isInRange(d)});
+	graph(toVisualize);
+	console.log( toVisualize.length);
 }
 
 function isInRange(datum){
@@ -222,3 +226,10 @@ function isInRange(datum){
 			&& datum['assists'] <= ranges[2][1]
 }
 
+function graph(data) {
+	chart.selectAll(".bar")
+		.data(data)
+		.exit().remove()
+    	.enter().append("rect")
+      	.attr("class", "bar")
+}
