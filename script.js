@@ -227,9 +227,9 @@ function isInRange(datum){
 }
 
 function graph(data) {
-	chart.selectAll(".bar")
-		.data(data)
-		.exit().remove()
-    	.enter().append("rect")
-      	.attr("class", "bar")
+	// chart.selectAll(".bar")
+	// 	.data(data)
+	// 	.exit().remove()
+ //    	.enter().append("rect")
+ //      	.attr("class", "bar")
 }
