@@ -55,27 +55,9 @@ div {
 }
 
 #lollogo {
-    -moz-animation: cssAnimation 0s ease-in 2s forwards;
-    -webkit-animation: cssAnimation 0s ease-in 2s forwards;
-    -o-animation: cssAnimation 0s ease-in 2s forwards;
-    animation: cssAnimation 0s ease-in 2s forwards;
-    -webkit-animation-fill-mode: forwards;
-    animation-fill-mode: forwards;
-}
-
-@keyframes cssAnimation {
-    to {
-        width:0;
-        height:0;
-        overflow:hidden;
-    }
-}
-@-webkit-keyframes cssAnimation {
-    to {
-        width:0;
-        height:0;
-        visibility:hidden;
-    }
+    width: 10%;
+    height: 20%;
+    margin-top: 15px;
 }
 
 .slider-range {
