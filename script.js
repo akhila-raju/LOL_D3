@@ -89,7 +89,7 @@ d3.csv("flarlarlar.csv", type, function(error, data) {
       	.attr("height", function(d) {return height - yScale(dayWins[d['day']][1]);})
       	.attr("width", xScale.rangeBand());
 
-    graph(dataset);
+    update(dataset);
 
 });
 
@@ -215,7 +215,7 @@ function filterData(attr, values){
 		ranges[2] = values;
 	}
 	var toVisualize = dataset.filter(function(d) { return isInRange(d)});
-	graph(toVisualize);
+	update(toVisualize);
 	console.log( toVisualize.length);
 }
 
@@ -226,10 +226,16 @@ function isInRange(datum){
 			&& datum['assists'] <= ranges[2][1]
 }
 
-function graph(data) {
-	// chart.selectAll(".bar")
-	// 	.data(data)
-	// 	.exit().remove()
- //    	.enter().append("rect")
- //      	.attr("class", "bar")
+function update(data) {
+	var bar = chart.selectAll(".bar")
+		.data(data)
+
+	bar.exit().remove();
+
+	bar.enter().append("rect")
+		.attr("class", "bar")
+      	.attr("x", function(d) { return xScale(d['day']); })
+      	.attr("y", function(d) { return yScale(dayWins[d['day']][1]);})
+      	.attr("height", function(d) {return height - yScale(dayWins[d['day']][1]);})
+      	.attr("width", xScale.rangeBand());
 }
