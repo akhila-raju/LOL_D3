@@ -68,8 +68,9 @@ d3.csv("flarlarlar.csv", type, function(error, data) {
     dayWins = winRate(dataset, 'day');
     console.log(dayWins);
     
-  	xScale.domain(dataset.map(function(d) { return d['day']; }));
-  	yScale.domain([0, 1]);
+  	xScale.domain(dayWins.map(function(d) { return d[0]; }));
+  	yScale.domain([0, d3.max(dayWins.map(function(d) {return d[1];}))]);
+
 
   	chart.append("g")
       	.attr("class", "x axis")
@@ -80,8 +81,8 @@ d3.csv("flarlarlar.csv", type, function(error, data) {
       	.attr("class", "y axis")
       	.call(yAxis);
 
-  	chart.selectAll("bar")
-      	.data(dayWins)
+  	chart.selectAll("rect")
+      	.data(dayWins, function(d) { return(d); })
     	.enter().append("rect")
       	.attr("class", "bar")
       	.attr("x", function(d) { return xScale(d[0]); })
@@ -227,11 +228,12 @@ function isInRange(datum){
 function update(dataset) {
   dayWins = winRate(dataset, 'day')
   console.log(dayWins);
+  yScale.domain([0, d3.max(dayWins.map(function(d) {return d[1];}))]);
 
-	var bar = chart.selectAll("bar")
-		.data(dayWins)
+	var bar = chart.selectAll("rect")
+		.data(dayWins, function(d) { return(d); });
 
-	bar.exit().remove();
+  bar.exit().remove();
 
 	bar.enter().append("rect")
 		.attr("class", "bar")
@@ -239,5 +241,8 @@ function update(dataset) {
       	.attr("y", function(d) { return yScale(d[1]);})
       	.attr("height", function(d) {return height - yScale(d[1]);})
       	.attr("width", xScale.rangeBand());
+
+ 
+
 
 }
