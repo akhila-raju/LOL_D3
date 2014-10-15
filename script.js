@@ -70,7 +70,7 @@ d3.csv("pobelter.csv", type, function(error, data) {
               .attr('class', 'd3-tip')
               .offset([-10, 0])
               .html(function(d) {
-        return "<strong>Games played:</strong> <span style='color:red'>" + gamesPlayed(data, d[0]) + "</span>";});
+        return "<strong>Games played:</strong> <span style='color:orange'>" + gamesPlayed(data, d[0]) + "</span>";});
 
   dataset = data;
 
@@ -342,7 +342,7 @@ function update(dataset) {
               .attr('class', 'd3-tip')
               .offset([-10, 0])
               .html(function(d) {
-        return "<strong>Games played:</strong> <span style='color:red'>" + gamesPlayed(dataset, d[0]) + "</span>";});
+        return "<strong>Games played:</strong> <span style='color:orange'>" + gamesPlayed(dataset, d[0]) + "</span>";});
 
   svg.call(tip);
 
