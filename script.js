@@ -95,6 +95,18 @@ d3.csv("pobelter.csv", type, function(error, data) {
       	.attr("height", function(d) {return height - yScale(d[1]);})
       	.attr("width", xScale.rangeBand());
 
+	chart.append("g")
+	    .attr("class", "y axis")
+	    .call(yAxis)
+	  	.append("text")
+	    .attr("transform", "rotate(-90)")
+	    .attr("y", 6)
+	    .attr("dy", ".71em")
+	    .style("text-anchor", "end")
+	    .text("Win Rate");
+
+
+
 });
 
 function type(d) {
