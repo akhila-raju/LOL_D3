@@ -105,9 +105,10 @@ d3.csv("pobelter.csv", type, function(error, data) {
       .enter().append("rect")
         .attr("class", "bar")
         .attr("x", function(d) { return xScale(d[0]); })
-        .attr("y", function(d) { return yScale(d[1]);})
-        .attr("height", function(d) {return height - yScale(d[1]);})
-        .attr("width", xScale.rangeBand());
+        .attr("y", function(d) { return isNaN(d[1])?yScale(0):yScale(d[1]);})
+        .attr("height", function(d) {return isNaN(d[1])?height-yScale(0.01):height-yScale(d[1]);})
+        .attr("width", xScale.rangeBand())
+        .style("fill", function(d) {return isNaN(d[1])?"red":"steelblue";});
 
     var maxKills = d3.max(dataset.map(function(d) {return d['kills'];}));
     var maxDeaths = d3.max(dataset.map(function(d) {return d['deaths'];}));
@@ -197,8 +198,7 @@ function winLoss(data, a){
 function winRate(data, a){
   var wins = winLoss(data, a)[0];
   var losses = winLoss(data, a)[1];
-  var xVals = unique(wins.concat(losses));
-  xVals.sort(sortNumber);
+  var xVals = range(d3.min(data.map(function(d){return d[a]})), d3.max(data.map(function(d){return d[a]})));
   var rates = [];
   for (i = 0; i<xVals.length; i++){
     val = xVals[i]
@@ -214,8 +214,10 @@ function winRate(data, a){
         l++;
       }
     }
-    if (w == 0){
-      rates.push([val,0]);
+    if (w == 0 && l == 0){
+      rates.push([val, NaN]);
+    } else if (w==0){
+      rates.push([val, 0])
     } else if (l == 0){
       rates.push([val, 1]);
     } else {
@@ -323,7 +325,6 @@ function isInRange(datum){
 
 function update(dataset) {
   dayWins = winRate(dataset, 'timeOfDay');
-  console.log(dayWins);
   yScale.domain([0, 1]);
 
   var bar = chart.selectAll("rect")
@@ -334,8 +335,9 @@ function update(dataset) {
   bar.enter().append("rect")
     .attr("class", "bar")
         .attr("x", function(d) { return xScale(d[0]); })
-        .attr("y", function(d) { return yScale(d[1]);})
-        .attr("height", function(d) {return height - yScale(d[1]);})
-        .attr("width", xScale.rangeBand());
+        .attr("y", function(d) { return isNaN(d[1])?yScale(0):yScale(d[1]);})
+        .attr("height", function(d) {return isNaN(d[1])?height - yScale(0.01):height-yScale(d[1]);})
+        .attr("width", xScale.rangeBand())
+        .style("fill", function(d) {return isNaN(d[1])?"red":"steelblue";});
 
 }
