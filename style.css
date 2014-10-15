@@ -38,3 +38,7 @@ div {
 	height:150px;
 	float: left;
 }
+
+.chart rect {
+  fill: steelblue;
+}

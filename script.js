@@ -1,11 +1,11 @@
-var w = 960;
-var h = 500;
+var w = 750;
+var h = 400;
 
 var dataset;
 
 var margin = {top: 20, right: 30, bottom: 30, left: 40},
-    width = 960 - margin.left - margin.right,
-    height = 500 - margin.top - margin.bottom;
+    width = w - margin.left - margin.right,
+    height = h - margin.top - margin.bottom;
 
 var svg = d3.select("body")
             .append("svg")
@@ -60,12 +60,12 @@ d3.csv("flarlarlar.csv", type, function(error, data) {
 
 	dataset = data;
 
-	var brush = d3.svg.brush()
-    	.x(x)
-    	.extent([.3, .9])
-   		.on("brushstart", brushstart)
-    	.on("brush", brushmove)
-    	.on("brushend", brushend);
+	// var brush = d3.svg.brush()
+ //    	.x(xScale)
+ //    	.extent([.3, .9])
+ //   		.on("brushstart", brushstart)
+ //    	.on("brush", brushmove)
+ //    	.on("brushend", brushend);
 
   	xScale.domain(data.map(function(d) { return d['day']; }));
   	yScale.domain([0, 1]);
