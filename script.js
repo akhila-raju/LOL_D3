@@ -65,7 +65,8 @@ d3.csv("flarlarlar.csv", type, function(error, data) {
  //   		.on("brushstart", brushstart)
  //    	.on("brush", brushmove)
  //    	.on("brushend", brushend);
-
+    dayWins = winRate(dataset, 'day');
+    
   	xScale.domain(dataset.map(function(d) { return d['day']; }));
   	yScale.domain([0, 1]);
 
@@ -78,7 +79,7 @@ d3.csv("flarlarlar.csv", type, function(error, data) {
       	.attr("class", "y axis")
       	.call(yAxis);
 
-    dayWins = winRate(dataset, 'day');
+    
 
   	chart.selectAll(".bar")
       	.data(dataset)
@@ -226,9 +227,12 @@ function isInRange(datum){
 			&& datum['assists'] <= ranges[2][1]
 }
 
-function update(data) {
+function update(dataset) {
+  dayWins = winRate(dataset, 'day')
+  console.log(dayWins);
+
 	var bar = chart.selectAll(".bar")
-		.data(data)
+		.data(dataset)
 
 	bar.exit().remove();
 
