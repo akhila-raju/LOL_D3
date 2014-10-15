@@ -3,6 +3,8 @@ var h = 400;
 
 var dataset;
 
+var ranges;
+
 var attributes = ['kills', 'deaths', 'assists', 'wardsPlaced']
 
 var margin = {top: 20, right: 30, bottom: 30, left: 40},
@@ -100,6 +102,7 @@ d3.csv("pobelter.csv", type, function(error, data) {
     var maxDeaths = d3.max(dataset.map(function(d) {return d['deaths'];}));
     var maxAssists = d3.max(dataset.map(function(d) {return d['kills'];}));
     var maxWards = d3.max(dataset.map(function(d) {return d['wardsPlaced'];}));
+    ranges = [[0, maxKills], [0, maxDeaths], [0, maxAssists], [0, maxWards]];
 
   $(function() {
     $( "#kills" ).slider({
@@ -287,10 +290,6 @@ function timeOfDay(ms){
   a = new Date(ms);
   return a.getHours();
 }
-
-
-
-var ranges = [[0, 27], [0, 13], [0, 33]];
 
 function filterData(attr, values){
   for (i = 0; i < attributes.length; i++){
