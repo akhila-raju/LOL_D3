@@ -3,6 +3,8 @@ var h = 400;
 
 var dataset;
 
+var attributes = ['kills', 'deaths', 'assists']
+
 var margin = {top: 20, right: 30, bottom: 30, left: 40},
     width = w - margin.left - margin.right,
     height = h - margin.top - margin.bottom;
@@ -48,7 +50,9 @@ d3.csv("flarlarlar.csv", type, function(error, data) {
 							 d['deaths'] = +d['deaths']
 							 d['time'] = +d['time'],
 							 d['day'] = dayOfWeek(d['time']),
+               d['date'] = dateStr(d['time']),
 							 d['winner'] = d['winner']=="True"?1:0;});
+
 	var domainByTrait = {},
     	traits = d3.keys(data[0]),
     	n = traits.length;
@@ -156,6 +160,11 @@ function dayOfWeek(ms){
 	return a.getDay();
 }
 
+function dateStr(ms){
+  a = new Date(ms);
+  return a.toLocaleDateString();
+}
+
   $(function() {
     $( "#kills" ).slider({
       range: true,
@@ -202,8 +211,6 @@ function dayOfWeek(ms){
   });
 
 var ranges = [[0, 27], [0, 13], [0, 33]];
-
-attributes = ['kills', 'deaths', 'assists']
 
 function filterData(attr, values){
   for (i = 0; i < attributes.length; i++){
