@@ -88,6 +88,7 @@ d3.csv("flarlarlar.csv", type, function(error, data) {
       	.attr("y", function(d) { return yScale(dayWins[d['day']][1]);})
       	.attr("height", function(d) {return height - yScale(dayWins[d['day']][1]);})
       	.attr("width", xScale.rangeBand());
+      
 });
 
 function type(d) {
@@ -163,8 +164,8 @@ var killRange, deathRange, assistRange;
       max: 27,
       values: [ 0, 27 ],
       slide: function( event, ui ) {
-      	killRange = ui.values;
         $( "#killamount" ).val( ui.values[ 0 ] + " - " + ui.values[ 1 ] );
+      	filterData("kills", ui.values);
       }
     });
     $( "#killamount" ).val( $( "#kills" ).slider( "values", 0 ) +
@@ -179,6 +180,7 @@ var killRange, deathRange, assistRange;
       values: [ 0, 13 ],
       slide: function( event, ui ) {
         $( "#deathamount" ).val( ui.values[ 0 ] + " - " + ui.values[ 1 ] );
+      	filterData("deaths", ui.values);
       }
     });
     $( "#deathamount" ).val( $( "#deaths" ).slider( "values", 0 ) +
@@ -192,13 +194,31 @@ var killRange, deathRange, assistRange;
       max: 33,
       values: [ 0, 33 ],
       slide: function( event, ui ) {
-      	assistRange = ui.values;
         $( "#assistamount" ).val( ui.values[ 0 ] + " - " + ui.values[ 1 ] );
+      	filterData("assists", ui.values);
       }
     });
     $( "#assistamount" ).val( $( "#assists" ).slider( "values", 0 ) +
       " - " + $( "#assists" ).slider( "values", 1 ) );
   });
 
+var ranges = [];
 
-    
+function filterData(attr, values){
+	if (attr == 'kills'){
+		ranges[0] = values;
+	} else if (attr == 'deaths'){
+		ranges[1] = values;
+	} else if (attr == 'assists'){
+		ranges[2] = values;
+	}
+	var toVisualize = dataset.filter(function(d) { return isInRange(d)});
+}
+
+function isInRange(datum){
+	return datum['kills'] >= ranges[0][0] && datum['kills'] 
+			<= ranges[0][1] && datum['deaths'] >= ranges[1][0] 
+			&& datum['deaths'] <= ranges[1][1] && datum['assists'] >= ranges[2][0]
+			&& datum['assists'] <= ranges[2][1]
+}
+
