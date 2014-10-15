@@ -15,7 +15,14 @@ div {
 	height: 680;
 }
 
+#title, #filters, #infobar {
+	font-family: 'Raleway', sans-serif;
+	font-size: 20px;
+	text-align: center;
+}
+
 #title {
+	padding-top: -20px;
 	text-align: center;
 	height: 50px;
 }
@@ -25,6 +32,7 @@ div {
 	height:450px;
 	float: left;
 	border-top: 0;
+	text-align: center;
 }
 
 #filters {
@@ -41,4 +49,28 @@ div {
 
 .chart rect {
   fill: steelblue;
+}
+
+#lollogo {
+    -moz-animation: cssAnimation 0s ease-in 2s forwards;
+    -webkit-animation: cssAnimation 0s ease-in 2s forwards;
+    -o-animation: cssAnimation 0s ease-in 2s forwards;
+]    animation: cssAnimation 0s ease-in 2s forwards;
+    -webkit-animation-fill-mode: forwards;
+    animation-fill-mode: forwards;
+}
+
+@keyframes cssAnimation {
+    to {
+        width:0;
+        height:0;
+        overflow:hidden;
+    }
+}
+@-webkit-keyframes cssAnimation {
+    to {
+        width:0;
+        height:0;
+        visibility:hidden;
+    }
 }
