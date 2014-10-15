@@ -154,6 +154,7 @@ function dayOfWeek(ms){
 	return a.getDay();
 }
 
+var killRange, deathRange, assistRange;
 
   $(function() {
     $( "#kills" ).slider({
@@ -162,11 +163,12 @@ function dayOfWeek(ms){
       max: 27,
       values: [ 0, 27 ],
       slide: function( event, ui ) {
-        $( "#amount" ).val( "$" + ui.values[ 0 ] + " - $" + ui.values[ 1 ] );
+      	killRange = ui.values;
+        $( "#killamount" ).val( ui.values[ 0 ] + " - " + ui.values[ 1 ] );
       }
     });
-    $( "#amount" ).val( "$" + $( ".slider-range" ).slider( "values", 0 ) +
-      " - $" + $( ".slider-range" ).slider( "values", 1 ) );
+    $( "#killamount" ).val( $( "#kills" ).slider( "values", 0 ) +
+      " - " + $( "#kills" ).slider( "values", 1 ) );
   });
 
   $(function() {
@@ -176,11 +178,11 @@ function dayOfWeek(ms){
       max: 13,
       values: [ 0, 13 ],
       slide: function( event, ui ) {
-        $( "#amount" ).val( "$" + ui.values[ 0 ] + " - $" + ui.values[ 1 ] );
+        $( "#deathamount" ).val( ui.values[ 0 ] + " - " + ui.values[ 1 ] );
       }
     });
-    $( "#amount" ).val( "$" + $( ".slider-range" ).slider( "values", 0 ) +
-      " - $" + $( ".slider-range" ).slider( "values", 1 ) );
+    $( "#deathamount" ).val( $( "#deaths" ).slider( "values", 0 ) +
+      " - " + $( "#deaths" ).slider( "values", 1 ) );
   });
 
     $(function() {
@@ -190,9 +192,13 @@ function dayOfWeek(ms){
       max: 33,
       values: [ 0, 33 ],
       slide: function( event, ui ) {
-        $( "#amount" ).val( "$" + ui.values[ 0 ] + " - $" + ui.values[ 1 ] );
+      	assistRange = ui.values;
+        $( "#assistamount" ).val( ui.values[ 0 ] + " - " + ui.values[ 1 ] );
       }
     });
-    $( "#amount" ).val( "$" + $( ".slider-range" ).slider( "values", 0 ) +
-      " - $" + $( ".slider-range" ).slider( "values", 1 ) );
+    $( "#assistamount" ).val( $( "#assists" ).slider( "values", 0 ) +
+      " - " + $( "#assists" ).slider( "values", 1 ) );
   });
+
+
+    
