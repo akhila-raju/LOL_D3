@@ -156,8 +156,6 @@ function dayOfWeek(ms){
 	return a.getDay();
 }
 
-var killRange, deathRange, assistRange;
-
   $(function() {
     $( "#kills" ).slider({
       range: true,
@@ -205,25 +203,26 @@ var killRange, deathRange, assistRange;
 
 var ranges = [[0, 27], [0, 13], [0, 33]];
 
+attributes = ['kills', 'deaths', 'assists']
+
 function filterData(attr, values){
-	if (attr == 'kills'){
-		ranges[0] = values;
-	} else if (attr == 'deaths'){
-		ranges[1] = values;
-	} else if (attr == 'assists'){
-		ranges[2] = values;
-	}
+  for (i = 0; i < attributes.length; i++){
+    if (attr == attributes[i]){
+      ranges[i] = values;
+    }
+  }
 	var toVisualize = dataset.filter(function(d) { return isInRange(d)});
 	update(toVisualize);
 }
 
 function isInRange(datum){
-	return datum['kills'] >= ranges[0][0] && datum['kills'] 
-			<= ranges[0][1] && datum['deaths'] >= ranges[1][0] 
-			&& datum['deaths'] <= ranges[1][1] && datum['assists'] >= ranges[2][0]
-			&& datum['assists'] <= ranges[2][1]
+  for (i = 0; i < attributes.length; i++){
+    if (datum[attributes[i]] < ranges[i][0] || datum[attributes[i]] > ranges[i][1]){
+      return false;
+    }
+  }
+  return true;
 }
-
 
 function update(dataset) {
   dayWins = winRate(dataset, 'day')
