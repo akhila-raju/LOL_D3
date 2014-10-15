@@ -154,10 +154,11 @@ function dayOfWeek(ms){
 	return a.getDay();
 }
 
+
   $(function() {
     $( ".slider-range" ).slider({
       range: true,
-      min: 0,
+      min:  0,
       max: 500,
       values: [ 75, 300 ],
       slide: function( event, ui ) {
