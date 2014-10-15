@@ -242,7 +242,4 @@ function update(dataset) {
       	.attr("height", function(d) {return height - yScale(d[1]);})
       	.attr("width", xScale.rangeBand());
 
- 
-
-
 }
