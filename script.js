@@ -3,7 +3,7 @@ var h = 400;
 
 var dataset;
 
-var attributes = ['kills', 'deaths', 'assists']
+var attributes = ['kills', 'deaths', 'assists', 'wardsPlaced']
 
 var margin = {top: 20, right: 30, bottom: 30, left: 40},
     width = w - margin.left - margin.right,
@@ -49,6 +49,7 @@ d3.csv("pobelter.csv", type, function(error, data) {
 							 d['assists'] = +d['assists'],
 							 d['deaths'] = +d['deaths']
 							 d['time'] = +d['time'],
+               d['wardsPlaced'] = +d['wardsPlaced'],
 							 d['day'] = dayOfWeek(d['time']),
                d['date'] = dateStr(d['time']),
                d['timeOfDay'] = timeOfDay(d['time']),
@@ -94,6 +95,71 @@ d3.csv("pobelter.csv", type, function(error, data) {
       	.attr("y", function(d) { return yScale(d[1]);})
       	.attr("height", function(d) {return height - yScale(d[1]);})
       	.attr("width", xScale.rangeBand());
+
+    var maxKills = d3.max(dataset.map(function(d) {return d['kills'];}));
+    var maxDeaths = d3.max(dataset.map(function(d) {return d['deaths'];}));
+    var maxAssists = d3.max(dataset.map(function(d) {return d['kills'];}));
+    var maxWards = d3.max(dataset.map(function(d) {return d['wardsPlaced'];}));
+
+  $(function() {
+    $( "#kills" ).slider({
+      range: true,
+      min:  0,
+      max: maxKills,
+      values: [ 0, maxKills ],
+      slide: function( event, ui ) {
+        $( "#killamount" ).val( ui.values[ 0 ] + " - " + ui.values[ 1 ] );
+        filterData("kills", ui.values);
+      }
+    });
+    $( "#killamount" ).val( $( "#kills" ).slider( "values", 0 ) +
+      " - " + $( "#kills" ).slider( "values", 1 ) );
+  });
+
+  $(function() {
+    $( "#deaths" ).slider({
+      range: true,
+      min:  0,
+      max: maxDeaths,
+      values: [ 0, maxDeaths ],
+      slide: function( event, ui ) {
+        $( "#deathamount" ).val( ui.values[ 0 ] + " - " + ui.values[ 1 ] );
+        filterData("deaths", ui.values);
+      }
+    });
+    $( "#deathamount" ).val( $( "#deaths" ).slider( "values", 0 ) +
+      " - " + $( "#deaths" ).slider( "values", 1 ) );
+  });
+
+  $(function() {
+    $( "#assists" ).slider({
+      range: true,
+      min:  0,
+      max: maxAssists,
+      values: [ 0, maxAssists ],
+      slide: function( event, ui ) {
+        $( "#assistamount" ).val( ui.values[ 0 ] + " - " + ui.values[ 1 ] );
+        filterData("assists", ui.values);
+      }
+    });
+    $( "#assistamount" ).val( $( "#assists" ).slider( "values", 0 ) +
+      " - " + $( "#assists" ).slider( "values", 1 ) );
+  });
+
+  $(function() {
+    $( "#wardsPlaced" ).slider({
+      range: true,
+      min:  0,
+      max: maxWards,
+      values: [ 0, maxWards ],
+      slide: function( event, ui ) {
+        $( "#wardamount" ).val( ui.values[ 0 ] + " - " + ui.values[ 1 ] );
+        filterData("wardsPlaced", ui.values);
+      }
+    });
+    $( "#wardamount" ).val( $( "#wardsPlaced" ).slider( "values", 0 ) +
+      " - " + $( "#wardsPlaced" ).slider( "values", 1 ) );
+  });
 
 });
 
@@ -222,50 +288,7 @@ function timeOfDay(ms){
   return a.getHours();
 }
 
-  $(function() {
-    $( "#kills" ).slider({
-      range: true,
-      min:  0,
-      max: 27,
-      values: [ 0, 27 ],
-      slide: function( event, ui ) {
-        $( "#killamount" ).val( ui.values[ 0 ] + " - " + ui.values[ 1 ] );
-      	filterData("kills", ui.values);
-      }
-    });
-    $( "#killamount" ).val( $( "#kills" ).slider( "values", 0 ) +
-      " - " + $( "#kills" ).slider( "values", 1 ) );
-  });
 
-  $(function() {
-    $( "#deaths" ).slider({
-      range: true,
-      min:  0,
-      max: 13,
-      values: [ 0, 13 ],
-      slide: function( event, ui ) {
-        $( "#deathamount" ).val( ui.values[ 0 ] + " - " + ui.values[ 1 ] );
-      	filterData("deaths", ui.values);
-      }
-    });
-    $( "#deathamount" ).val( $( "#deaths" ).slider( "values", 0 ) +
-      " - " + $( "#deaths" ).slider( "values", 1 ) );
-  });
-
-    $(function() {
-    $( "#assists" ).slider({
-      range: true,
-      min:  0,
-      max: 33,
-      values: [ 0, 33 ],
-      slide: function( event, ui ) {
-        $( "#assistamount" ).val( ui.values[ 0 ] + " - " + ui.values[ 1 ] );
-      	filterData("assists", ui.values);
-      }
-    });
-    $( "#assistamount" ).val( $( "#assists" ).slider( "values", 0 ) +
-      " - " + $( "#assists" ).slider( "values", 1 ) );
-  });
 
 var ranges = [[0, 27], [0, 13], [0, 33]];
 
