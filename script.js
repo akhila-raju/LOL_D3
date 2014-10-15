@@ -48,7 +48,6 @@ d3.csv("flarlarlar.csv", type, function(error, data) {
 							 d['deaths'] = +d['deaths']
 							 d['time'] = +d['time'],
 							 d['day'] = dayOfWeek(d['time']),
-							 console.log(d['day']);
 							 d['winner'] = d['winner']=="True"?1:0;});
 	var domainByTrait = {},
     	traits = d3.keys(data[0]),
@@ -171,4 +170,3 @@ function dayOfWeek(ms){
 
 
 
-  
