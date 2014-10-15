@@ -69,7 +69,7 @@ d3.csv("flarlarlar.csv", type, function(error, data) {
     console.log(dayWins);
     
   	xScale.domain(dayWins.map(function(d) { return d[0]; }));
-  	yScale.domain([0, d3.max(dayWins.map(function(d) {return d[1];}))]);
+  	yScale.domain([0, 1]);
 
 
   	chart.append("g")
@@ -228,7 +228,7 @@ function isInRange(datum){
 function update(dataset) {
   dayWins = winRate(dataset, 'day')
   console.log(dayWins);
-  yScale.domain([0, d3.max(dayWins.map(function(d) {return d[1];}))]);
+  yScale.domain([0, 1]);
 
 	var bar = chart.selectAll("rect")
 		.data(dayWins, function(d) { return(d); });
