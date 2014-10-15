@@ -74,3 +74,7 @@ div {
         visibility:hidden;
     }
 }
+
+.slider-range {
+    margin: 20px;
+}
